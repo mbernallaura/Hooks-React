@@ -15,8 +15,9 @@ export const TrafficLightWithHook = () => {
                 ></div>
             </div>
 
-            //!Se puede hacer de varias formas pero se va a hacer las comparaciones de si ligth es red entonces y con los demas colores en el 
-            //!custom hook para que aca  se vea reducido
+            {/* Se puede hacer de varias formas pero se va a hacer las comparaciones de si ligth es red entonces y con los demas colores en el 
+            custom hook para que aca  se vea reducido */}
+            
             {/* <div className={`w-32 h-32 ${ light ==='red' ? colors[light] : "bg-gray-500" } rounded-full`}></div> */}
             <div className={`w-32 h-32 ${ redLight } rounded-full`}></div>
             <div className={`w-32 h-32 ${ yellowLight } rounded-full`}></div>
