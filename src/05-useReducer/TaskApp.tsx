@@ -18,7 +18,20 @@ export const TasksApp = () => {
     const [inputValue, setInputValue] = useState('');
 
     const addTodo = () => {
-        console.log('Agregar tarea', inputValue);
+        if (inputValue.length === 0) return;
+
+        const newTodo: Todo = {
+            id: Date.now(),
+            //! .trim() = remover los espacios del principio y final del texto
+            text: inputValue.trim(),
+            completed: false
+        }
+
+        //!MANERA INCORRECTA = todos.push(newTodo) ya que eso no le dice a react que hubo un cambio en el objeto 
+        //!Para insertar un nuevo objeto en react se hace de estas dos formas, "funcion dispacher"
+        //setTodos((prev) => [...prev, newTodo]), es lo mismo lo de abajo con esta linea
+        setTodos([...todos, newTodo]);
+        setInputValue('');
 
     };
 
