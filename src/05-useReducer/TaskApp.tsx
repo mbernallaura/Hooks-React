@@ -36,18 +36,26 @@ export const TasksApp = () => {
     };
 
     const toggleTodo = (id: number) => {
-        console.log('Cambiar de true a false', id);
+        const updateTodos = todos.map(todo =>{
+            if (todo.id === id) {
+                return {...todo, completed: !todo.completed}
+            }
+            return todo;
+        });
 
+        setTodos(updateTodos);
     };
-
+ 
     const deleteTodo = (id: number) => {
-        console.log('Eliminar tarea', id);
-
+        const updateTodos  = todos.filter(todo => todo.id !== id);
+        setTodos(updateTodos);
     };
 
     const handleKeyPress = (e: React.KeyboardEvent) => {
-        console.log('Presiono enter');
-
+        console.log({key: e.key});
+        if(e.key === 'Enter')  {
+            addTodo();
+        }
     };
 
     const completedCount = todos.filter((todo) => todo.completed).length;
