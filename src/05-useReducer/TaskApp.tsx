@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useReducer, useState } from 'react';
 
 import { Plus, Trash2, Check } from 'lucide-react';
 
@@ -6,49 +6,54 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { getTasksInitialState, tasksReducer } from './reducer/tasksReducer';
 
-interface Todo {
-    id: number;
-    text: string;
-    completed: boolean;
-}
+// interface Todo {
+//     id: number;
+//     text: string;
+//     completed: boolean;
+// }
 
 export const TasksApp = () => {
-    const [todos, setTodos] = useState<Todo[]>([]);
+    //const [todos, setTodos] = useState<Todo[]>([]);
     const [inputValue, setInputValue] = useState('');
+    const [state, dispatch] = useReducer( tasksReducer, getTasksInitialState() ) 
 
     const addTodo = () => {
         if (inputValue.length === 0) return;
 
-        const newTodo: Todo = {
-            id: Date.now(),
-            //! .trim() = remover los espacios del principio y final del texto
-            text: inputValue.trim(),
-            completed: false
-        }
+        // const newTodo: Todo = {
+        //     id: Date.now(),
+        //     //! .trim() = remover los espacios del principio y final del texto
+        //     text: inputValue.trim(),
+        //     completed: false
+        // }
 
         //!MANERA INCORRECTA = todos.push(newTodo) ya que eso no le dice a react que hubo un cambio en el objeto 
         //!Para insertar un nuevo objeto en react se hace de estas dos formas, "funcion dispacher"
         //setTodos((prev) => [...prev, newTodo]), es lo mismo lo de abajo con esta linea
-        setTodos([...todos, newTodo]);
+        // setTodos([...todos, newTodo]);
+        dispatch({type: 'ADD_TODO', payload: inputValue});
         setInputValue('');
 
     };
 
     const toggleTodo = (id: number) => {
-        const updateTodos = todos.map(todo =>{
-            if (todo.id === id) {
-                return {...todo, completed: !todo.completed}
-            }
-            return todo;
-        });
+        // const updateTodos = todos.map(todo =>{
+        //     if (todo.id === id) {
+        //         return {...todo, completed: !todo.completed}
+        //     }
+        //     return todo;
+        // });
 
-        setTodos(updateTodos);
+        //setTodos(updateTodos);
+        dispatch({type:'TOGGLE_TODO', payload: id});
     };
  
     const deleteTodo = (id: number) => {
-        const updateTodos  = todos.filter(todo => todo.id !== id);
-        setTodos(updateTodos);
+        //const updateTodos  = todos.filter(todo => todo.id !== id);
+        //setTodos(updateTodos);
+        dispatch({type:'DELETE_TODO', payload:id});
     };
 
     const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -58,8 +63,9 @@ export const TasksApp = () => {
         }
     };
 
-    const completedCount = todos.filter((todo) => todo.completed).length;
-    const totalCount = todos.length;
+    const { todos, completedNumber: completedCount, length:totalCount} = state;
+    // const completedCount = todos.filter((todo) => todo.completed).length;
+    // const totalCount = todos.length;
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4">
