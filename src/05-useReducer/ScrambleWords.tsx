@@ -61,7 +61,17 @@ export const ScrambleWords = () => {
         e.preventDefault();
         // Implementar lógica de juego
         console.log('Intento de adivinanza:', guess, currentWord);
+        const findWord = GAME_WORDS.includes(guess);
+        if (findWord) {
+            setPoints(points + 1);
+        }
+            
+        setErrorCounter(errorCounter + 1);
 
+        if (errorCounter === 2) {
+            setIsGameOver(!isGameOver);
+        }
+        
     };
 
     const handleSkip = () => {
