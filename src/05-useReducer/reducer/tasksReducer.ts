@@ -1,4 +1,4 @@
-
+import * as z from "zod";
 interface Todo {
     id: number;
     text: string;
@@ -18,6 +18,19 @@ export type TaskAction =
 | { type: 'TOGGLE_TODO'; payload: number }
 | { type: 'DELETE_TODO'; payload: number }
 
+const TodoScheme = z.object({
+    id: z.number(),
+    text: z.string(),
+    completed: z.boolean()
+});
+
+const TaskStateScheme = z.object({
+    todos: z.array(TodoScheme),
+    length: z.number(),
+    completedNumber: z.number(),
+    pending: z.number()
+})
+
 export const getTasksInitialState = (): TaskState =>{
     const localStorageState =localStorage.getItem('tasks-state');
 
@@ -30,7 +43,22 @@ export const getTasksInitialState = (): TaskState =>{
         }  
     }
 
-    return JSON.parse(localStorageState);
+    //Validar mediante zod
+    const result = TaskStateScheme.safeParse(JSON.parse(localStorageState));
+
+    if (result.error) {
+        console.log(result.error);
+        return{
+            todos: [],
+            length: 0,
+            completedNumber: 0,
+            pending: 0
+        }  
+    }
+    return result.data;
+
+    //el objeto puede haber sdo manipulado
+    //return JSON.parse(localStorageState);
 }
 
 //! Reducer = funcion pura que resuelva un nuevo estado basado en los argumentos "state, action", siempre tiene que devolver algo de tipo state
