@@ -67,6 +67,7 @@ export const ScrambleWords = () => {
         }
             
         setErrorCounter(errorCounter + 1);
+        setMaxAllowErrors(maxSkips - 1);
 
         if (errorCounter === 2) {
             setIsGameOver(!isGameOver);
@@ -80,7 +81,8 @@ export const ScrambleWords = () => {
 
     const handlePlayAgain = () => {
         console.log('Jugar de nuevo');
-        
+        setPoints(0);
+        setErrorCounter(0);
     };
 
   //! Si ya no hay palabras para jugar, se muestra el mensaje de fin de juego
