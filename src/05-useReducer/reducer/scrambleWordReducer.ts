@@ -60,16 +60,60 @@ export const getInitialState = (): ScrambleWordsState =>{
         skipCounter: 0,
         words: shuffledWords,
         totalWords: shuffledWords.length, 
-    }
+    } 
 }
 
 export type ScrambleWordsAction = 
-| { type: 'no_tengo_idea'}
-| { type: 'no_tengo_idea2'}
+| { type: 'SET_GUESS', payload: string}
+| { type: 'CHECK_ANSWER'}
+| { type: 'PLAY_AGAIN', payload: ScrambleWordsState}
+| { type: 'SKIP'}
 
-export const scrambleWordsReducer = (state: ScrambleWordsState, action: ScrambleWordsAction) =>{
+export const scrambleWordsReducer = (state: ScrambleWordsState, action: ScrambleWordsAction): ScrambleWordsState =>{
     switch (action.type) {
-    
+        case 'SET_GUESS':
+            return{
+                ...state,
+                guess: action.payload.trim().toUpperCase()
+            }
+
+        case 'CHECK_ANSWER':{
+            if (state.currentWord === state.guess) {
+                const newWords = state.words.slice(1);
+                return{
+                    ...state,
+                    words: newWords,
+                    points: state.points + 1,
+                    guess: '',
+                    currentWord: newWords[0],
+                    scrambledWord: scrambleWord(newWords[0]) 
+                }
+            }
+
+            return{
+                ...state,
+                guess: '',
+                errorCounter: state.errorCounter + 1,
+                isGameOver: state.errorCounter + 1 >= state.maxAllowErrors
+            }
+        }
+
+        case "SKIP":
+            if (state.skipCounter + 1 >= state.maxSkips) return state;
+            const updatedWords = state.words.slice(1);
+            const scrambledWord = scrambleWord(updatedWords[0]);
+            return{
+                ...state,
+                words: updatedWords,
+                skipCounter: state.skipCounter + 1,
+                currentWord: updatedWords[0],
+                scrambledWord: scrambledWord,
+                guess: '',
+            }
+
+        case "PLAY_AGAIN":
+            return action.payload;
+
         default:
             return state;
     }
