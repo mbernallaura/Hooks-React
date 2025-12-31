@@ -2,6 +2,7 @@ import { memo } from "react";
 
 interface Props{
     subtitle:string;
+    //cambio para que la funcion con argumento que esta fuera del componente no renderice
     callMyAPI: (myValue: string) => void;
 }
 
