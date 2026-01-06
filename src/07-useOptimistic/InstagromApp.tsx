@@ -1,4 +1,5 @@
 import { useOptimistic, useState, useTransition } from 'react';
+import { toast } from 'sonner'
 
 interface Comment {
     id: number;
@@ -37,16 +38,28 @@ export const InstagromApp = () => {
         //No bloquea el ui mientras se ejecutan
         startTransition(async()=>{
             // Simular la peticion http al servidor
-            await new Promise((resolve) => setTimeout(resolve, 3000));
-            console.log('Mensaje grabado');          
-            setComments(prev => [
-                ...prev,
-                {
-                    id: new Date().getTime(),
-                    text: messageText
-                }
-            ]);
+            await new Promise((resolve) => setTimeout(resolve, 3000));     
 
+            //En el caso de que funcione  
+            // setComments(prev => [
+            //     ...prev,
+            //     {
+            //         id: new Date().getTime(),
+            //         text: messageText
+            //     }
+            // ]);
+            //Codigo para simular el fallo
+            //? reversa el commentario que se estaba intentando enviar
+            setComments(prev => prev);
+            toast('Error al agregar el comentario',{
+                    description: 'Intente nuevamente',
+                    duration: 10_000,
+                    position: 'top-right',
+                    action:{
+                        label: 'Cerrar',
+                        onClick:() => toast.dismiss()
+                    },
+            })
         });
     };
 
