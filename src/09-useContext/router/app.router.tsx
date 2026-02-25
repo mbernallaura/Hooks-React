@@ -1,7 +1,7 @@
 import { createBrowserRouter, Navigate } from "react-router";
-import { AboutPage } from "../about/AboutPage";
-import { ProfilePage } from "../profile/ProfilePage";
-import { LoginPage } from "../auth/LoginPage";
+import { AboutPage } from "../pages/about/AboutPage";
+import { ProfilePage } from "../pages/profile/ProfilePage";
+import { LoginPage } from "../pages/auth/LoginPage";
 
 export const appRouter = createBrowserRouter([
     {
