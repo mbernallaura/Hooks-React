@@ -1,4 +1,4 @@
-import { createContext, useState, type PropsWithChildren } from "react";
+import { createContext, useEffect, useState, type PropsWithChildren } from "react";
 import { users, type User } from "../data/user-mock.data";
 
 //Manera de tipar el children                                                                                                                       
@@ -39,13 +39,25 @@ export const UserContextProvider = ({children}: PropsWithChildren) => {
 
         setUser(user);
         setAuthStatus('authenticated');
+        localStorage.setItem('userId', userId.toString());
         return true;
     }
 
     const handleLogout = () =>{
         setAuthStatus('not-authenticated');
         setUser(null);
+        localStorage.removeItem('userId');
     }
+
+    useEffect(() => {
+        const storedUserId = localStorage.getItem('userId');
+        if(storedUserId){
+            handleLogin(+storedUserId);
+            return;
+        }
+        handleLogout();
+    }, [])
+    
 
     return (
         //este UserContext es el provider
